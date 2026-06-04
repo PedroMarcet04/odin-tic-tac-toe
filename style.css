@@ -31,3 +31,13 @@ body {
     width: 100%;
     font-size: 80cqh;
 }
+
+.result {
+    display: flex;
+    padding: 8px;
+    gap: 8px;
+}
+
+.hide {
+    display: none;
+}

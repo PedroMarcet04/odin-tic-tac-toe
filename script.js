@@ -31,6 +31,16 @@ const game = (() => {
 
             const container = document.querySelector("#game-container");
 
+            const resultContainer = document.querySelector("#result");
+
+            const showResult = function(result) {
+                resultContainer.firstChild.textContent = result;
+                resultContainer.classList.remove("hide");
+            };
+
+            const hideResult = function() {
+                resultContainer.classList.add("hide");
+            }
 
             const update = function(row, col) {
                 spaces[row][col].textContent = positions[row][col];
@@ -38,6 +48,7 @@ const game = (() => {
 
             const initialize = function() {
                 container.innerHTML = "";
+                spaces.length = 0;
                 for (let row = 0; row < positions.length; row++) {
                     const spacesRow = [];
 
@@ -64,12 +75,15 @@ const game = (() => {
             };
 
             return {
+                showResult,
+                hideResult,
                 update,
                 initialize,
             };
         })();
 
         const initializeGrid = function() {
+            display.hideResult();
             // console.log(size);
             positions = [];
             for (let i = 0; i < size; i++) {
@@ -93,6 +107,10 @@ const game = (() => {
             } else {
                 return false;
             }
+        };
+
+        const displayResult = function(result) {
+            display.showResult(result);
         };
 
         const checkForVictoryOf = function(player) {
@@ -141,15 +159,23 @@ const game = (() => {
         return {
             initializeGrid,
             setPositionTo,
+            displayResult,
             checkForVictoryOf,
             logPositions,
         };
     })();
 
+    const restartButton = document.querySelector("#restart-button");
+    (() => {
+        restartButton.addEventListener("click", () => {
+            start(size);
+        });
+    })();
+
     const start = function(s=3) {
         size = s;
         currentTurn = 0;
-        // console.log(size);
+        console.log(size);
         grid.initializeGrid();
     };
 
@@ -157,6 +183,7 @@ const game = (() => {
     const end = function(reason) {
         currentTurn = -1;
         console.log(reason);
+        grid.displayResult(reason);
     }
 
     // Returns true if game over
