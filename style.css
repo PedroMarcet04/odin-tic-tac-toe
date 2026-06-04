@@ -3,3 +3,31 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+body {
+    background-color: aquamarine;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-container {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    height: 800px;
+    width: 800px;
+}
+.game-container>.row {
+    display: flex;
+    height: 100%;
+    container-type: size;
+}
+.space-button {
+    background-color: white;
+    gap: 1px;
+    height: 100%;
+    width: 100%;
+    font-size: 80cqh;
+}

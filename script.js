@@ -10,7 +10,7 @@ const game = (() => {
         const display = (() => {
             const spaces = [];
 
-            const containter = document.querySelector("#game-container");
+            const container = document.querySelector("#game-container");
 
 
             const update = function(row, col) {
@@ -36,7 +36,7 @@ const game = (() => {
                         spacesRow.push(spaceButton);
                     }
 
-                    containter.appendChild(rowDiv);
+                    container.appendChild(rowDiv);
 
                     spaces.push(spacesRow);
                 }
@@ -111,6 +111,7 @@ const game = (() => {
     const start = function() {
         grid.initializeGrid();
     };
+
 
     const logGrid = function() {
         grid.logPositions();
