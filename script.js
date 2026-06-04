@@ -1,6 +1,9 @@
 const game = (() => {
     const size = 3;
 
+    const players = ["X", "O"];
+    let currentTurn = -1;
+
     // Stores and manages the grid, 
     // also takes care of its display
     const grid = (() => {
@@ -18,18 +21,19 @@ const game = (() => {
             };
 
             const initialize = function() {
-                for (row in positions) {
+                for (let row = 0; row < positions.length; row++) {
                     const spacesRow = [];
 
                     const rowDiv = document.createElement("div");
                     rowDiv.classList.add("row");
 
-                    for (col in positions) {
+                    for (let col = 0; col < positions[row].length; col++) {
                         const spaceButton = document.createElement("button");
                         spaceButton.classList.add("space-button");
                         spaceButton.textContent = positions[row][col];
                         spaceButton.addEventListener("click", () => {
-                            // HERE GOES BUTTON ACTION
+                            // console.log({row, col});
+                            takeTurn(row, col);
                         });
                         rowDiv.appendChild(spaceButton);
 
@@ -50,19 +54,25 @@ const game = (() => {
 
         const initializeGrid = function() {
         // Declare 'size' by 'size' array filled with empty space
-            positions = Array.from({ length: size }, () => Array(size).fill(" "));
+            positions = Array.from({ length: size }, () => Array(size).fill(null));
             display.initialize();
         };
 
         const setPositionTo = function(row, col, player) {
-            positions[row][col] = player;
-            display.update(row, col);
+            if (positions[row][col] == null) {
+                // console.log({row, col, player});
+                positions[row][col] = player;
+                display.update(row, col);
+                return true;
+            } else {
+                return false;
+            }
         };
 
         const checkForVictoryOf = function(player) {
             // Check diagonals
             let victory = true;
-            for (i in positions) {
+            for (let i = 0; i < positions.length; i++) {
                 if (positions[i][i] != player) {
                     victory = false;
                     break;
@@ -71,10 +81,10 @@ const game = (() => {
             if (victory) return true;
 
             // Check rows
-            for (row in positions) {
+            for (row of positions) {
                 victory = true;
-                for (col in positions) {
-                    if (positions[row][col] != player) {
+                for (space of row) {
+                    if (space != player) {
                         victory = false;
                         break;
                     }
@@ -83,9 +93,9 @@ const game = (() => {
             }
 
             // Check columns
-            for (col in positions) {
+            for (let col = 0; col < positions.length; col++) {
                 victory = true;
-                for (row in positions) {
+                for (let row = 0; row < positions[col].length; row++) {
                     if (positions[row][col] != player) {
                         victory = false;
                         break;
@@ -104,14 +114,36 @@ const game = (() => {
 
         return {
             initializeGrid,
+            setPositionTo,
+            checkForVictoryOf,
             logPositions,
         };
     })();
 
     const start = function() {
+        currentTurn = 0;
         grid.initializeGrid();
     };
 
+    // Returns true
+    const end = function(reason) {
+        currentTurn = -1;
+        console.log(reason);
+    }
+
+    // Returns true if game over
+    const takeTurn = function(row, col) {
+        const currentPlayer = players[currentTurn%players.length];
+        if (currentTurn != -1 && grid.setPositionTo(row, col, currentPlayer)) {
+            if (grid.checkForVictoryOf(currentPlayer)) {
+                return end(`Player ${currentPlayer} won!`);
+            } else {
+                currentTurn++;
+                if (currentTurn >= size**2) return end(`No more moves!`);
+                return false;
+            }
+        }
+    }
 
     const logGrid = function() {
         grid.logPositions();
