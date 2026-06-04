@@ -1,5 +1,21 @@
+(() => {
+    const resizeForm = document.querySelector("#resize-game-form");
+    resizeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(resizeForm);
+        
+        const data = Object.fromEntries(formData.entries());
+
+        const size = data["size"];
+
+        game.start(size);
+    })
+})();
+
+
 const game = (() => {
-    const size = 3;
+    let size = 3;
 
     const players = ["X", "O"];
     let currentTurn = -1;
@@ -21,6 +37,7 @@ const game = (() => {
             };
 
             const initialize = function() {
+                container.innerHTML = "";
                 for (let row = 0; row < positions.length; row++) {
                     const spacesRow = [];
 
@@ -53,8 +70,17 @@ const game = (() => {
         })();
 
         const initializeGrid = function() {
-        // Declare 'size' by 'size' array filled with empty space
-            positions = Array.from({ length: size }, () => Array(size).fill(null));
+            // console.log(size);
+            positions = [];
+            for (let i = 0; i < size; i++) {
+                // console.log("Adding row");
+                positions.push([]);
+                for (let j = 0; j < size; j++) {
+                    // console.log("Adding element");
+                    positions[i].push(null);
+                }
+            }
+            // console.log(positions);
             display.initialize();
         };
 
@@ -120,8 +146,10 @@ const game = (() => {
         };
     })();
 
-    const start = function() {
+    const start = function(s=3) {
+        size = s;
         currentTurn = 0;
+        // console.log(size);
         grid.initializeGrid();
     };
 
@@ -155,5 +183,4 @@ const game = (() => {
     };
 })();
 
-game.start();
-game.logGrid();
+game.start(3);
